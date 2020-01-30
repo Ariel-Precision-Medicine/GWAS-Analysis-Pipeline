@@ -1,7 +1,7 @@
 # GWAS-Analysis-Pipeline
 The analysis pipeline for a complex trait GWAS
 
-##Preprocessing UKBB data##
+## Preprocessing UKBB data ##
 
 
 **NAPS2 Cohort**
