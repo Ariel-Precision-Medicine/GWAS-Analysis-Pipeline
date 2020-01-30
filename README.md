@@ -14,6 +14,11 @@ grep -v 1165 Diagnoses.only.txt | shuf -n 1362 | awk '{print $1}' > ukb_id_contr
 grep -w -F -f ukb_id_pancreatitis.txt sex.txt > sex_pancreatitis.txt
 grep -w -F -f ukb_id_control.txt sex.txt > sex_control.txt
 ```
+Compare with
+```
+sort ukb_id_pancreatitis.txt | head
+sort sex_pancreatitis.txt | head
+```
 
 ## NAPS2 Cohort ##
 
