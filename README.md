@@ -9,7 +9,7 @@ grep 1165 Diagnoses.only.txt | awk '{print $1}' > ukb_id_pancreatitis.txt
 grep -v 1165 Diagnoses.only.txt | shuf -n 1362 | awk '{print $1}' > ukb_id_control.txt
 ```
 ### Grab Covariates ###
-*Sex / Gender*
+**Sex / Gender**
 ```
 ./ukbconv ukb32816.enc_ukb txt -s31 -osex.txt
 cp sex.txt sex.factor.txt
@@ -25,7 +25,7 @@ Compare with
 sort ukb_id_pancreatitis.txt | head
 sort sex_pancreatitis.txt | head
 ```
-*Smoking Status*
+**Smoking Status**
 ```
 code
 ```
