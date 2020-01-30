@@ -27,7 +27,8 @@ sort sex_pancreatitis.txt | head
 ```
 **Smoking Status**
 ```
-code
+./ukbconv ukb32816.enc_ukb txt -s1239 -ocurrent_tobacco_smoking
+./ukbconv ukb32816.enc_ukb txt -s20116 -osmoking_status
 ```
 
 ## NAPS2 Cohort ##
