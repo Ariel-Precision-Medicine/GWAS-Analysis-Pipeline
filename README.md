@@ -1,5 +1,9 @@
 # GWAS-Analysis-Pipeline
 The analysis pipeline for a complex trait GWAS
+
+##Preprocessing UKBB data##
+
+
 **NAPS2 Cohort**
 
 The NAPS2 cohort has been described previously (Whitcomb et al. 2008). Briefly, the NAPS2 cohort was designed to be a well powered cohort of RAP and CP individuals for the purpose of investigating the genetic, environmental, and metabolic components of RAP and CP. 1492 individuals with pancreatitis (3 AP, 510 RAP, and 979 CP) and 869 controls.
