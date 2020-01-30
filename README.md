@@ -29,6 +29,10 @@ sort sex_pancreatitis.txt | head
 ```
 ./ukbconv ukb32816.enc_ukb txt -s1239 -ocurrent_tobacco_smoking
 ./ukbconv ukb32816.enc_ukb txt -s20116 -osmoking_status
+grep -w -F -f ukb_id_pancreatitis.txt current_tobacco_smoking.txt > current_tobacco_pancreatitis.tx
+grep -w -F -f ukb_id_control.txt current_tobacco_smoking.txt > current_tobacco_control.txt
+grep -w -F -f ukb_id_pancreatitis.txt smoking_status.txt > smoking_status_pancreatitis.txt
+grep -w -F -f ukb_id_control.txt smoking_status.txt > smoking_status_control.txt
 ```
 
 ## NAPS2 Cohort ##
