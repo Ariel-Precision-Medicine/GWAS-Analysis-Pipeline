@@ -8,7 +8,12 @@ The analysis pipeline for a complex trait GWAS
 grep 1165 Diagnoses.only.txt | awk '{print $1}' > ukb_id_pancreatitis.txt
 grep -v 1165 Diagnoses.only.txt | shuf -n 1362 | awk '{print $1}' > ukb_id_control.txt
 ```
-
+### Grab Covariates ###
+```
+./ukbconv ukb32816.enc_ukb txt -s31 -osex.txt
+grep -w -F -f ukb_id_pancreatitis.txt sex.txt > sex_pancreatitis.txt
+grep -w -F -f ukb_id_control.txt sex.txt > sex_control.txt
+```
 
 ## NAPS2 Cohort ##
 
