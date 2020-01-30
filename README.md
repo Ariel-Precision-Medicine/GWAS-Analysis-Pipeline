@@ -11,8 +11,13 @@ grep -v 1165 Diagnoses.only.txt | shuf -n 1362 | awk '{print $1}' > ukb_id_contr
 ### Grab Covariates ###
 ```
 ./ukbconv ukb32816.enc_ukb txt -s31 -osex.txt
+cp sex.txt sex.factor.txt
+awk -i inplace '$2=="0" {$2="Female"}1' sex.factor.txt 
+awk -i inplace '$2=="1" {$2="Male"}1' sex.factor.txt 
 grep -w -F -f ukb_id_pancreatitis.txt sex.txt > sex_pancreatitis.txt
 grep -w -F -f ukb_id_control.txt sex.txt > sex_control.txt
+grep -w -F -f ukb_id_pancreatitis.txt sex.factor.txt > sex_pancreatitis.factor.txt
+grep -w -F -f ukb_id_control.txt sex.factor.txt > sex_control.factor.txt
 ```
 Compare with
 ```
