@@ -12,7 +12,7 @@ gcta64 --mlma \
 --mbfile test.list \
 --grm ukb_cases \
 --pheno pancreatitis_vs_control_phenotypes.txt \
---covar pancreatitis_vs_control_discrete_covars.txt \
+--covar pancreatitis_vs_control_discrete_covars_nq.txt \
 --qcovar pancreatitis_vs_control_quantitative_covars.txt \
 --out ukb_pancreatitis_vs_control_out \
 --thread-num 10 \
