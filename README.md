@@ -30,7 +30,7 @@ cp /home/ubuntu/case_control_ids_matched.txt .
 mv *_matched.{bed,bim,fam} ../matched_data/
 cd ../matched_data/
 ls *.bed | sed 's/.\{4\}$//' > test.list
-mv /home/ubuntu/pancreatitis_vs_control_discrete_covars_matched.txt /home/ubuntu/pancreatitis_vs_control_quantitative_covars_bmiOnly_matched.txt /home/ubuntu/pancreatitis_vs_control_phenotypes_matched.txt /home/ubuntu/case_control_ids_matched.txt .
+cp /home/ubuntu/pancreatitis_vs_control_discrete_covars_matched.txt /home/ubuntu/pancreatitis_vs_control_quantitative_covars_bmiOnly_matched.txt /home/ubuntu/pancreatitis_vs_control_phenotypes_matched.txt /home/ubuntu/case_control_ids_matched.txt .
 ```
 
 4. Make Genetic Relatedness Matrix
