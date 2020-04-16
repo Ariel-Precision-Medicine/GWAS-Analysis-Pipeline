@@ -8,8 +8,8 @@ The analysis pipeline for a complex trait GWAS
 case_control_ids_matched.txt
 pancreatitis_vs_control_discrete_covars_matched.txt
 pancreatitis_vs_control_quantitative_covars_bmiOnly_matched.txt
-pancreatitis_vs_control_phenotypes_matched.txt
 ```
+Note: may need to remove quotations around discrete variables using *remove_quotes.sh*
 
 2. Create new data directory for analysis - case/control input files and results. Make sure /data/ mounted drive permissions are r/w.
 ```
