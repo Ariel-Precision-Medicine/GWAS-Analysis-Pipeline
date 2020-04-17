@@ -1,6 +1,9 @@
 # GWAS-Analysis-Pipeline
 The analysis pipeline for a complex trait GWAS
 
+## To Do ##
+- wrap entire workflow into single automated script
+
 ## GWAS Workflow ##
 
 1. Create covariate files using *gwas_prep_matched.Rmd* on UKB Application 48065
