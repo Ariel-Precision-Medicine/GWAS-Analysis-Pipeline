@@ -1,0 +1,73 @@
+---
+title: "gwas results"
+author: "dspagnolo"
+date: "4/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Install and Load packages
+```{r}
+#install.packages("qqman")
+library(qqman)
+```
+
+
+## Load Data
+```{r cars}
+#mlma <- read.delim(file="ukb_pancreatitis_vs_control_matched_out.mlma", header=TRUE, sep="\t", dec=".")
+#mlma <- read.delim(file="ukb_pancreatitis_vs_control_cponly_out.mlma", header=TRUE, sep="\t", dec=".")
+mlma <- read.delim(file="ukb_pancreatitis_vs_control_aponly_out.mlma", header=TRUE, sep="\t", dec=".")
+head(mlma)
+
+colnames(mlma)[1] <-"CHR"
+colnames(mlma)[3] <-"BP"
+colnames(mlma)[9] <-"P"
+```
+
+```{r}
+png("manhattan.png")          # starts writing a png to file
+manhattan(mlma)               # makes the actual plot
+dev.off()                     # closes the PDF file
+```
+
+```{r}
+#png("qq.png")                 # starts writing a png to file
+#png("qq_cp.png", width = 5, height = 4, units = 'in', res = 300)
+png("qq_ap.png", width = 5, height = 4, units = 'in', res = 300)
+qq(mlma$P)                    # makes the actual plot
+dev.off()                     # closes the PDF file
+```
+
+```{r}
+#png("manhattan_annotated.png", width = 6, height = 4, units = 'in', res = 300)
+#png("manhattan_annotated_cp.png", width = 6, height = 4, units = 'in', res = 300)
+png("manhattan_annotated_ap.png", width = 6, height = 4, units = 'in', res = 300)
+manhattan(mlma, annotatePval = 0.0005, annotateTop = FALSE)
+dev.off()             
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+manhattan(mlma)
+```
+
+
+```{r pressure, echo=FALSE}
+manhattan(mlma, annotatePval = 0.0005, annotateTop = FALSE)
+```
+
+```{r pressure, echo=FALSE}
+manhattan(mlma)
+```
+
+
+```{r pressure, echo=FALSE}
+qq(mlma$P)
+```
