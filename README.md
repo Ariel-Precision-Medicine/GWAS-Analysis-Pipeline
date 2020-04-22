@@ -100,10 +100,10 @@ GWAS was performed on ___ imputed SNPs with genotyping on the autosomes with a m
 ## Helpful code snippets ##
 
 Extract *only* case or control IDs
-'''
+```
 cat pancreatitis_vs_control_phenotypes_matched.txt | awk '$3=="1" {print $1}' > case_ids.txt
 cat pancreatitis_vs_control_phenotypes_matched.txt | awk '$3=="0" {print $1}' > control_ids.txt
-'''
+```
 
 ## Older Self-Reported Workflow ##
 
