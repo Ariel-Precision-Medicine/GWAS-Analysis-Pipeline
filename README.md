@@ -97,6 +97,14 @@ For the UKB study, we used the NAPS2-identified covariates of sex, BMI, and smok
 
 GWAS was performed on ___ imputed SNPs with genotyping on the autosomes with a minor allele frequency ≥ 0.01 using GCTA (Yang et al. 2011). A multiple linear model controlled for age, sex, BMI, smoking, and PCAs 1-10 as covariates was used for the analysis along with a genetic relatedness matrix. Genome-wide significant (p ≤ 5 x 10-8) loci were defined using PLINK v1.90 (Purcell et al. 2007).
 
+## Helpful code snippets ##
+
+Extract *only* case or control IDs
+'''
+cat pancreatitis_vs_control_phenotypes_matched.txt | awk '$3=="1" {print $1}' > case_ids.txt
+cat pancreatitis_vs_control_phenotypes_matched.txt | awk '$3=="0" {print $1}' > control_ids.txt
+'''
+
 ## Older Self-Reported Workflow ##
 
 ### Generating UKBB IDs for cases and controls (non-matched) ###
