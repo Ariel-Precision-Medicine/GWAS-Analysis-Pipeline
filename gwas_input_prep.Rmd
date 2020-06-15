@@ -1,0 +1,425 @@
+---
+title: "gwas_input_prep"
+output: html_document
+---
+
+
+RUN = *Cmd+Shift+Enter*.  
+ADD CHUNK = *Cmd+Option+I*.  
+PREVIEW = *Cmd+Shift+K*.    
+
+## Install Packages/Libaries
+```{r}
+# Install packages
+#devtools::install_github("kenhanscombe/ukbtools", dependencies = TRUE)
+#install.packages("Matching", dependencies=TRUE) 
+#install.packages("MatchIt")
+#install.packages("optmatch")
+
+# Add libraries
+library(ukbtools)
+#library(optmatch)
+#library(Matching)
+#library(MatchIt)
+```
+
+## Load up data
+```{r}
+# Create data frames for second data release
+my_ukb_data <- ukb_df("ukb40721")
+dim(my_ukb_data)
+```
+
+## Define variables to keep in data frame
+```{r}
+# Define all necessary disease columns for IDC10. Arrays 0-65.
+col_disease_icd10 <- c("diagnoses_icd10_f41270_0_0","diagnoses_icd10_f41270_0_1",
+                       "diagnoses_icd10_f41270_0_2","diagnoses_icd10_f41270_0_3",
+                       "diagnoses_icd10_f41270_0_4","diagnoses_icd10_f41270_0_5",
+                       "diagnoses_icd10_f41270_0_6","diagnoses_icd10_f41270_0_7",
+                       "diagnoses_icd10_f41270_0_8","diagnoses_icd10_f41270_0_9",
+                       "diagnoses_icd10_f41270_0_10","diagnoses_icd10_f41270_0_11",
+                       "diagnoses_icd10_f41270_0_12","diagnoses_icd10_f41270_0_13",
+                       "diagnoses_icd10_f41270_0_14","diagnoses_icd10_f41270_0_15",
+                       "diagnoses_icd10_f41270_0_16","diagnoses_icd10_f41270_0_17",
+                       "diagnoses_icd10_f41270_0_18","diagnoses_icd10_f41270_0_19",
+                       "diagnoses_icd10_f41270_0_20","diagnoses_icd10_f41270_0_21",
+                       "diagnoses_icd10_f41270_0_22","diagnoses_icd10_f41270_0_23",
+                       "diagnoses_icd10_f41270_0_24","diagnoses_icd10_f41270_0_25",
+                       "diagnoses_icd10_f41270_0_26","diagnoses_icd10_f41270_0_27",
+                       "diagnoses_icd10_f41270_0_28","diagnoses_icd10_f41270_0_29",
+                       "diagnoses_icd10_f41270_0_30","diagnoses_icd10_f41270_0_31",
+                       "diagnoses_icd10_f41270_0_32","diagnoses_icd10_f41270_0_33",
+                       "diagnoses_icd10_f41270_0_34","diagnoses_icd10_f41270_0_35",
+                       "diagnoses_icd10_f41270_0_36","diagnoses_icd10_f41270_0_37",
+                       "diagnoses_icd10_f41270_0_38","diagnoses_icd10_f41270_0_39",
+                       "diagnoses_icd10_f41270_0_40","diagnoses_icd10_f41270_0_41",
+                       "diagnoses_icd10_f41270_0_42","diagnoses_icd10_f41270_0_43",
+                       "diagnoses_icd10_f41270_0_44","diagnoses_icd10_f41270_0_45",
+                       "diagnoses_icd10_f41270_0_46","diagnoses_icd10_f41270_0_47",
+                       "diagnoses_icd10_f41270_0_48","diagnoses_icd10_f41270_0_49",
+                       "diagnoses_icd10_f41270_0_50","diagnoses_icd10_f41270_0_51",
+                       "diagnoses_icd10_f41270_0_52","diagnoses_icd10_f41270_0_53",
+                       "diagnoses_icd10_f41270_0_54","diagnoses_icd10_f41270_0_55",
+                       "diagnoses_icd10_f41270_0_56","diagnoses_icd10_f41270_0_57",
+                       "diagnoses_icd10_f41270_0_58","diagnoses_icd10_f41270_0_59",
+                       "diagnoses_icd10_f41270_0_60","diagnoses_icd10_f41270_0_61",
+                       "diagnoses_icd10_f41270_0_62","diagnoses_icd10_f41270_0_63",
+                       "diagnoses_icd10_f41270_0_64","diagnoses_icd10_f41270_0_65",
+                       "diagnoses_icd10_f41270_0_66","diagnoses_icd10_f41270_0_67",
+                       "diagnoses_icd10_f41270_0_68","diagnoses_icd10_f41270_0_69",
+                       "diagnoses_icd10_f41270_0_70","diagnoses_icd10_f41270_0_71",
+                       "diagnoses_icd10_f41270_0_72","diagnoses_icd10_f41270_0_73",
+                       "diagnoses_icd10_f41270_0_74","diagnoses_icd10_f41270_0_75",
+                       "diagnoses_icd10_f41270_0_76","diagnoses_icd10_f41270_0_77",
+                       "diagnoses_icd10_f41270_0_78","diagnoses_icd10_f41270_0_79",
+                       "diagnoses_icd10_f41270_0_80","diagnoses_icd10_f41270_0_81",
+                       "diagnoses_icd10_f41270_0_82","diagnoses_icd10_f41270_0_83",
+                       "diagnoses_icd10_f41270_0_84","diagnoses_icd10_f41270_0_85",
+                       "diagnoses_icd10_f41270_0_86","diagnoses_icd10_f41270_0_87",
+                       "diagnoses_icd10_f41270_0_88","diagnoses_icd10_f41270_0_89",
+                       "diagnoses_icd10_f41270_0_90","diagnoses_icd10_f41270_0_91",
+                       "diagnoses_icd10_f41270_0_92","diagnoses_icd10_f41270_0_93",
+                       "diagnoses_icd10_f41270_0_94","diagnoses_icd10_f41270_0_95",
+                       "diagnoses_icd10_f41270_0_96","diagnoses_icd10_f41270_0_97",
+                       "diagnoses_icd10_f41270_0_98","diagnoses_icd10_f41270_0_99",
+                       "diagnoses_icd10_f41270_0_100","diagnoses_icd10_f41270_0_101",
+                       "diagnoses_icd10_f41270_0_102","diagnoses_icd10_f41270_0_103",
+                       "diagnoses_icd10_f41270_0_104","diagnoses_icd10_f41270_0_105",
+                       "diagnoses_icd10_f41270_0_106","diagnoses_icd10_f41270_0_107",
+                       "diagnoses_icd10_f41270_0_108","diagnoses_icd10_f41270_0_109",
+                       "diagnoses_icd10_f41270_0_110","diagnoses_icd10_f41270_0_111",
+                       "diagnoses_icd10_f41270_0_112","diagnoses_icd10_f41270_0_113",
+                       "diagnoses_icd10_f41270_0_114","diagnoses_icd10_f41270_0_115",
+                       "diagnoses_icd10_f41270_0_116","diagnoses_icd10_f41270_0_117",
+                       "diagnoses_icd10_f41270_0_118","diagnoses_icd10_f41270_0_119",
+                       "diagnoses_icd10_f41270_0_120","diagnoses_icd10_f41270_0_121",
+                       "diagnoses_icd10_f41270_0_122","diagnoses_icd10_f41270_0_123",
+                       "diagnoses_icd10_f41270_0_124","diagnoses_icd10_f41270_0_125",
+                       "diagnoses_icd10_f41270_0_126","diagnoses_icd10_f41270_0_127",
+                       "diagnoses_icd10_f41270_0_128","diagnoses_icd10_f41270_0_129",
+                       "diagnoses_icd10_f41270_0_130","diagnoses_icd10_f41270_0_131",
+                       "diagnoses_icd10_f41270_0_132","diagnoses_icd10_f41270_0_133",
+                       "diagnoses_icd10_f41270_0_134","diagnoses_icd10_f41270_0_135",
+                       "diagnoses_icd10_f41270_0_136","diagnoses_icd10_f41270_0_137",
+                       "diagnoses_icd10_f41270_0_138","diagnoses_icd10_f41270_0_139",
+                       "diagnoses_icd10_f41270_0_140","diagnoses_icd10_f41270_0_141",
+                       "diagnoses_icd10_f41270_0_142","diagnoses_icd10_f41270_0_143",
+                       "diagnoses_icd10_f41270_0_144","diagnoses_icd10_f41270_0_145",
+                       "diagnoses_icd10_f41270_0_146","diagnoses_icd10_f41270_0_147",
+                       "diagnoses_icd10_f41270_0_148","diagnoses_icd10_f41270_0_149",
+                       "diagnoses_icd10_f41270_0_150","diagnoses_icd10_f41270_0_151",
+                       "diagnoses_icd10_f41270_0_152","diagnoses_icd10_f41270_0_153",
+                       "diagnoses_icd10_f41270_0_154","diagnoses_icd10_f41270_0_155",
+                       "diagnoses_icd10_f41270_0_156","diagnoses_icd10_f41270_0_157",
+                       "diagnoses_icd10_f41270_0_158","diagnoses_icd10_f41270_0_159",
+                       "diagnoses_icd10_f41270_0_160","diagnoses_icd10_f41270_0_161",
+                       "diagnoses_icd10_f41270_0_162","diagnoses_icd10_f41270_0_163",
+                       "diagnoses_icd10_f41270_0_164","diagnoses_icd10_f41270_0_165",
+                       "diagnoses_icd10_f41270_0_166","diagnoses_icd10_f41270_0_167",
+                       "diagnoses_icd10_f41270_0_168","diagnoses_icd10_f41270_0_169",
+                       "diagnoses_icd10_f41270_0_170","diagnoses_icd10_f41270_0_171",
+                       "diagnoses_icd10_f41270_0_172","diagnoses_icd10_f41270_0_173",
+                       "diagnoses_icd10_f41270_0_174","diagnoses_icd10_f41270_0_175",
+                       "diagnoses_icd10_f41270_0_176","diagnoses_icd10_f41270_0_177",
+                       "diagnoses_icd10_f41270_0_178","diagnoses_icd10_f41270_0_179",
+                       "diagnoses_icd10_f41270_0_180","diagnoses_icd10_f41270_0_181",
+                       "diagnoses_icd10_f41270_0_182","diagnoses_icd10_f41270_0_183",
+                       "diagnoses_icd10_f41270_0_184","diagnoses_icd10_f41270_0_185",
+                       "diagnoses_icd10_f41270_0_186","diagnoses_icd10_f41270_0_187",
+                       "diagnoses_icd10_f41270_0_188","diagnoses_icd10_f41270_0_189",
+                       "diagnoses_icd10_f41270_0_190","diagnoses_icd10_f41270_0_191",
+                       "diagnoses_icd10_f41270_0_192","diagnoses_icd10_f41270_0_193",
+                       "diagnoses_icd10_f41270_0_194","diagnoses_icd10_f41270_0_195",
+                       "diagnoses_icd10_f41270_0_196","diagnoses_icd10_f41270_0_197",
+                       "diagnoses_icd10_f41270_0_198","diagnoses_icd10_f41270_0_199",
+                       "diagnoses_icd10_f41270_0_200","diagnoses_icd10_f41270_0_201",
+                       "diagnoses_icd10_f41270_0_202","diagnoses_icd10_f41270_0_203",
+                       "diagnoses_icd10_f41270_0_204","diagnoses_icd10_f41270_0_205",
+                       "diagnoses_icd10_f41270_0_206","diagnoses_icd10_f41270_0_207",
+                       "diagnoses_icd10_f41270_0_208","diagnoses_icd10_f41270_0_209",
+                       "diagnoses_icd10_f41270_0_210","diagnoses_icd10_f41270_0_211",
+                       "diagnoses_icd10_f41270_0_212")
+
+# Additional variables needed for analysis
+gwas_vars <- c("eid",
+               "year_of_birth_f34_0_0","month_of_birth_f52_0_0",
+               "sex_f31_0_0",
+               "current_tobacco_smoking_f1239_0_0","current_tobacco_smoking_f1239_1_0",
+               "current_tobacco_smoking_f1239_2_0","current_tobacco_smoking_f1239_3_0",
+               "ethnic_background_f21000_0_0",
+               "ethnic_background_f21000_1_0",
+               "ethnic_background_f21000_2_0",
+               "body_mass_index_bmi_f21001_0_0")
+```
+
+## Only keep needed variables
+```{r}
+my_ukb_data <- subset(my_ukb_data, select=c(col_disease_icd10,gwas_vars))
+```
+
+## Add extra variables to dataframe as needed
+```{r}
+# Add birthday variable, in R date format
+my_ukb_data$birthday <- as.Date(sprintf("%d-%s-%d", my_ukb_data$year_of_birth_f34_0_0, 
+                                        my_ukb_data$month_of_birth_f52_0_0,1), format="%Y-%B-%d")
+# Add age
+my_ukb_data$age_years <- as.numeric(floor((Sys.Date() - my_ukb_data$birthday)/365.25))
+```
+
+# Extract bad data point
+```{r}
+my_ukb_data <- my_ukb_data[-c(223169),]
+```
+
+
+## Make a UKB data-field to variable name table for reference or lookup.
+```{r}
+#my_ukb_key <- ukb_df_field("ukb40721")
+#my_ukb_key
+```
+
+# Extract Caucasian patients
+```{r}
+table(my_ukb_data$ethnic_background_f21000_0_0)
+#white <- with(my_ukb_data,
+#                  which(ethnic_background_f21000_0_0 %in%
+#                       c("White","Any other white background","British","Irish")))
+white <- with(my_ukb_data,
+                  which(ethnic_background_f21000_0_0 %in%
+                       c("White","Any other white background","British",
+                         "Irish", "White and Black Caribbean",
+                         "White and Black African", "White and Asian")))
+dim(my_ukb_data)[1]
+length(white)
+my_ukb_data <- my_ukb_data[white,]
+```
+
+## Define constants
+```{r}
+num_diagnosis_icd10 <- 410318
+num_cancer_icd10 <- 83480
+num_diagnosis_self <- 375036
+num_cancer_self <- 41697
+
+# Create list of all possible indicies
+num_subjects <- nrow(my_ukb_data)
+num_var <- ncol(my_ukb_data)
+all_indices <- seq(1, nrow(my_ukb_data), 1)
+```
+
+## Grab data frame indices
+```{r}
+# CF ICD10
+# Extract patients with K850-K859 acute pancreatitis designation via ICD 10
+cf_conditions_icd10 <- c("E840","E841","E8411","E8419","E848", "E849")
+cf_icd10_e84x <- which(rowSums(sapply(my_ukb_data[,col_disease_icd10],"%in%", cf_conditions_icd10))>0)
+paste0("# with ICD10 AP ", length(cf_icd10_e84x))
+
+# AP ICD10
+# Extract patients with K850-K859 acute pancreatitis designation via ICD 10
+ap_conditions_icd10 <- c("K85","K850","K851","K852","K853", "K858", "K859")
+ap_icd10_k85x <- which(rowSums(sapply(my_ukb_data[,col_disease_icd10],"%in%", ap_conditions_icd10))>0)
+paste0("# with ICD10 AP ", length(ap_icd10_k85x))
+
+# CP ICD10
+# Extract patients with K860-861 chronic pancreatitis designation via ICD 10
+cp_conditions_icd10 <- c("K860","K861")
+cp_icd10_k86x <- which(rowSums(sapply(my_ukb_data[,col_disease_icd10],"%in%", cp_conditions_icd10))>0)
+paste0("# with ICD10 CP ", length(cp_icd10_k86x))
+
+# AP & CP ICD10
+panc_idc10_ix <- sort(union(ap_icd10_k85x, cp_icd10_k86x))
+paste0("# with ICD10 AP or CP ", length(panc_idc10_ix))
+paste0("# with both ICD10 AP and CP ", length(intersect(ap_icd10_k85x, cp_icd10_k86x)))
+
+# CONTROLS ICD10
+# Extract patients WITHOUT ICD10 AP or CP designation
+control_icd10_total <- setdiff(all_indices, panc_idc10_ix)
+paste0("# controls ", length(control_icd10_total))
+
+# Grab samples of control population
+#mult_factor <- 12 # Memory issues
+#mult_factor <- 9
+mult_factor <- 6
+s <- length(panc_idc10_ix) * mult_factor
+#s <- 5000
+set.seed(5750)
+#control_icd10_sample500 <- sample(control_icd10_total, s, replace = FALSE, prob = NULL)
+#s <- 2000
+#control_icd10_sample2000 <- sample(control_icd10_total, s, replace = FALSE, prob = NULL)
+control_icd10_sample <- sample(control_icd10_total, s, replace = FALSE, prob = NULL)
+
+# Test for correctness
+(nrow(my_ukb_data) - length(control_icd10_total)) == (length(ap_icd10_k85x) + 
+                                                     length(cp_icd10_k86x) - length(intersect(ap_icd10_k85x,cp_icd10_k86x)))
+```
+
+## Subset patient populations
+```{r}
+# Subset AP ICD10 population
+#ap_icd10_data <- my_ukb_data[ap_icd10_k85x,]
+#dim(ap_icd10_data)
+
+# Subset CP ICD10 population
+#cp_icd10_data <- my_ukb_data[cp_icd10_k86x,]
+#dim(cp_icd10_data)
+
+# Subset AP/CP ICD10 population
+#panc_icd10_data <- my_ukb_data[panc_idc10_ix,]
+#dim(panc_icd10_data)
+
+# Subset ICD10 control sample population
+#control_icd10_data <- my_ukb_data[control_icd10_sample2000,]
+#control_icd10_data <- my_ukb_data[control_icd10_sample,]
+#dim(control_icd10_data)
+```
+
+
+
+# Create TEXTFILE_OF_4K_IIDS.txt
+```{r}
+eids <- my_ukb_data$eid
+x <- cbind(eids[panc_idc10_ix], eids[panc_idc10_ix])
+#y <- cbind(eids[control_icd10_sample2000], eids[control_icd10_sample2000])
+y <- cbind(eids[control_icd10_sample], eids[control_icd10_sample])
+z <- rbind(x,y)
+#fname <- "case_control_ids.txt"
+
+fname <- "case_control_ids_6x.txt"
+write.table(z, fname, append=FALSE, sep=" ", row.names=FALSE, col.names=FALSE)
+
+fname <- "case_only_ids_6x.txt"
+write.table(x, fname, append=FALSE, sep=" ", row.names=FALSE, col.names=FALSE)
+
+fname <- "control_only_ids_6x.txt"
+write.table(y, fname, append=FALSE, sep=" ", row.names=FALSE, col.names=FALSE)
+
+```
+
+# Create pancreatitis_vs_control_phenotypes.txt
+```{r}
+x <- cbind(eids[panc_idc10_ix], eids[panc_idc10_ix],1)
+#y <- cbind(eids[control_icd10_sample2000], eids[control_icd10_sample2000],0)
+y <- cbind(eids[control_icd10_sample], eids[control_icd10_sample],0)
+z <- rbind(x,y)
+#fname <- "pancreatitis_vs_control_phenotypes.txt"
+fname <- "pancreatitis_vs_control_phenotypes_6x.txt"
+write.table(z, fname, append=FALSE, sep=" ", row.names=FALSE, col.names=FALSE)
+```
+
+# Create pancreatitis_vs_control_discrete_covars.txt
+```{r}
+
+# Extract sex and smoking
+sex <- my_ukb_data$sex_f31_0_0
+smoking.0 <-my_ukb_data$current_tobacco_smoking_f1239_0_0
+smoking.1 <- my_ukb_data$current_tobacco_smoking_f1239_1_0
+smoking.2 <- my_ukb_data$current_tobacco_smoking_f1239_2_0
+smoking.3 <- my_ukb_data$current_tobacco_smoking_f1239_3_0
+
+# Convert factors to characters
+sex.c <- as.character(sex)
+smoking.0c <- as.character(smoking.0)
+smoking.1c <- as.character(smoking.1)
+smoking.2c <- as.character(smoking.2)
+smoking.3c <- as.character(smoking.3)
+table(sex.c)
+table(smoking.0c)
+table(smoking.1c)
+table(smoking.2c)
+table(smoking.3c)
+
+## Create master smoking vector
+###############################
+# If any of the instance index show smoking then 1, 
+# if not, THEN if any of the indicies show NO smoking then 0,
+# othewise, if all are "Prefer not to answer" then NA
+smoking <- ifelse(
+            (
+              (smoking.0c %in% c("Yes, on most or all days", "Only occasionally")) | 
+              (smoking.1c %in% c("Yes, on most or all days", "Only occasionally")) |
+              (smoking.2c %in% c("Yes, on most or all days", "Only occasionally")) |
+              (smoking.3c %in% c("Yes, on most or all days", "Only occasionally"))
+            ),
+            "1",
+            ifelse(
+              (
+                (smoking.0c == "No") |
+                (smoking.1c == "No") | 
+                (smoking.2c == "No") | 
+                (smoking.3c == "No")
+              ),
+              "0",
+              "NA"
+            )
+)
+
+x <- cbind(eids[panc_idc10_ix], 
+           eids[panc_idc10_ix],
+           sex.c[panc_idc10_ix], 
+           smoking[panc_idc10_ix])
+#y <- cbind(eids[control_icd10_sample2000],
+#           eids[control_icd10_sample2000],
+#           sex.c[control_icd10_sample2000], 
+#           smoking[control_icd10_sample2000])
+y <- cbind(eids[control_icd10_sample],
+           eids[control_icd10_sample],
+           sex.c[control_icd10_sample], 
+           smoking[control_icd10_sample])
+z <- rbind(x,y)
+
+# Discover NA indices for error checking
+na.ix <- which(is.na(z[,4]))
+#fname <- "pancreatitis_vs_control_discrete_covars.txt"
+fname <- "pancreatitis_vs_control_discrete_covars_6x.txt"
+write.table(z, fname, append=FALSE, sep=" ", row.names=FALSE, col.names=FALSE)
+```
+
+# Create pancreatitis_vs_control_quantitative_covars.txt 
+```{r}
+# Extract BMI, all other quantititative covars are PCs which will be added later
+
+# Just using the first instance of BMI
+bmi <- my_ukb_data$body_mass_index_bmi_f21001_0_0
+
+# TODO(DMS): Alternately, can do an avg of intances 0-3??
+
+# Look at BMI avgs
+summary(bmi)
+
+x <- cbind(eids[panc_idc10_ix], 
+           eids[panc_idc10_ix],
+           bmi[panc_idc10_ix])
+#y <- cbind(eids[control_icd10_sample2000],
+#           eids[control_icd10_sample2000],
+#           bmi[control_icd10_sample2000])
+y <- cbind(eids[control_icd10_sample],
+           eids[control_icd10_sample],
+           bmi[control_icd10_sample])
+z <- rbind(x,y)
+#fname <- "pancreatitis_vs_control_quantitative_covars_bmiOnly.txt"
+fname <- "pancreatitis_vs_control_quantitative_covars_6x.txt"
+write.table(z, fname, append=FALSE, sep=" ", row.names=FALSE, col.names=FALSE)
+```
+
+```{r}
+pca <- read.delim(file="ukb_cases.eigenvec", header=FALSE, sep=" ", dec=".")
+pca$V2 <- NULL
+#zeta <- as.data.frame(z)
+zeta <- read.delim(file="pancreatitis_vs_control_quantitative_covars_bmiOnly_matched.txt", header=FALSE, sep=" ", dec=".")
+zeta$ord <- 1:nrow(zeta) 
+quant <- merge(zeta, pca, by.x="V1", by.y="V1", all.x=TRUE)
+quant <- quant[order(quant$ord), ]
+quant$ord <- NULL
+quant <- as.matrix(quant)
+
+fname <- "pancreatitis_vs_control_quantitative_covars.txt"
+write.table(quant, fname, append=FALSE, sep=" ", row.names=FALSE, col.names=FALSE)
+```
+
+
+RUN = *Cmd+Shift+Enter*.  
+ADD CHUNK = *Cmd+Option+I*.  
+PREVIEW = *Cmd+Shift+K*.    
+

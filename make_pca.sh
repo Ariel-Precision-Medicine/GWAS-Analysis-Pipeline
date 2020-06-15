@@ -2,9 +2,10 @@
 #cd /data/casecontrol_data/
 #cd /data/matched_data/
 #cd /data/cp_data/
-cd /data/ap_data/
+#cd /data/ap_data/
+cd /data/case_control_6x/
 
 #gcta64 --grm ukb_cases --pca 10 --out ukb_cases
 #gcta64 --grm ukb_matched --pca 10 --out ukb_matched
 #gcta64 --grm cp_only --pca 10 --out cp_only
-gcta64 --grm ukb_aponly --pca 10 --out ukb_aponly
+gcta64 --grm ukb_6x --pca 10 --out ukb_6x
