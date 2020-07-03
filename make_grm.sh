@@ -4,9 +4,10 @@
 #cd /data/matched_data/
 #cd /data/cp_data/
 #cd /data/ap_data/
-cd /data/case_control_6x/
+#cd /data/case_control_6x/
+cd /data/hail_12x/
 
 #gcta64 --mbfile test.list --autosome --make-grm --out ukb_cases
 #gcta64 --mbfile test.list --autosome --make-grm --out cp_only
 #gcta64 --mbfile test.list --autosome --make-grm --out ukb_aponly
-gcta64 --mbfile test.list --autosome --make-grm --out ukb_6x
+gcta64 --mbfile test.list --autosome --make-grm --out hail_12x
