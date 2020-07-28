@@ -174,7 +174,7 @@ num_var <- ncol(my_ukb_data)
 all_indices <- seq(1, num_subjects, 1)
 ```
 
-## Grab data frame indices for AP, CP, pancreatitis (AP & CP), and controls
+## Grab data frame indices for AP, CP, pancreatitis (AP & CP) via ICD10
 ```{r}
 # AP ICD10
 # Extract patients with K850-K859 acute pancreatitis designation via ICD 10
@@ -192,7 +192,10 @@ paste0("# with ICD10 CP ", length(cp_icd10_k86x))
 panc_idc10_ix <- sort(union(ap_icd10_k85x, cp_icd10_k86x))
 paste0("# with ICD10 AP or CP ", length(panc_idc10_ix))
 paste0("# with both ICD10 AP and CP ", length(intersect(ap_icd10_k85x, cp_icd10_k86x)))
+```
 
+## Grab data frame indices for controls based on random sampling of non AP/CP
+```{r}
 # CONTROLS ICD10
 # Extract patients WITHOUT ICD10 AP or CP designation
 control_icd10_total <- setdiff(all_indices, panc_idc10_ix)
@@ -209,6 +212,16 @@ paste0("# controls with 12:1 control:case ratio ", length(control_icd10_sample))
 (nrow(my_ukb_data) - length(control_icd10_total)) == (length(ap_icd10_k85x) + 
                                                         length(cp_icd10_k86x) - length(intersect(ap_icd10_k85x,cp_icd10_k86x)))
 ```
+
+## Grab data frame indices for controls from previous run
+```{r}
+control_fname <- "control_panc_allancestry_12x_eid.txt"
+control_eids <- read.delim(file=control_fname, header=FALSE, sep="\t", dec=".")
+control_eids <- as.array(control_eids[,1])
+control_icd10_sample <- which(my_ukb_data$eid %in% control_eids)
+```
+
+
 
 ## Identify indices for AP-only, CP(AP-CP inclusive), and related controls
 ```{r}
@@ -297,7 +310,8 @@ for (ix in c) {
 casecontrol_eid_fname <- "casecontrol_panc_allancestry_12x_eid.txt"
 case_eid_fname <- "case_panc_allancestry_12x_eid.txt"
 control_eid_fname <- "control_panc_allancestry_12x_eid.txt"
-pheno_fname <- "annotations_panc_allancestry_12x.txt"
+#pheno_fname <- "annotations_panc_allancestry_12x.txt"
+pheno_fname <- "annotations_panc_allancestry_12x_ancestry.txt"
 
 # case & control ix
 ix_case <- panc_idc10_ix
@@ -382,12 +396,45 @@ bmi <- my_ukb_data$body_mass_index_bmi_f21001_0_0
 case_bmi <- bmi[ix_case]
 control_bmi <- bmi[ix_control]
 
+#########################
+# Ancestry (optional)
+#########################
+ancestry <- my_ukb_data$ethnic_background_f21000_0_0
+levels(ancestry) <- c(
+"other", #Prefer not to answer
+"other", #Do not know
+"white", #White
+"mixed", #Mixed
+"asian", #Asian or Asian British
+"black", #Black or Black British
+"chinese", #Chinese
+"other", #Other ethnic group
+"white", #British
+"white", #Irish
+"white", #Any other white background
+"mixed", #White and Black Caribbean
+"mixed", #White and Black African
+"mixed", #White and Asian
+"mixed", #Any other mixed background
+"asian", #Indian
+"asian", #Pakistani
+"asian", #Bangladeshi
+"asian", #Any other Asian background
+"black", #Caribbean
+"black", #African
+"black" #Any other Black background
+)
+case_ancestry <- ancestry[ix_case]
+control_ancestry <- ancestry[ix_control]
 
 #########################
 # Output
 #########################
 x <- cbind(case_eids, 1, case_sex, case_smoking, case_bmi)
 y <- cbind(control_eids, 0, control_sex, control_smoking, control_bmi)
+# NOTE: ancestry coded as factor 1-6 (1=other,2=white,3=mixed,4=asian,5=black,6=chinese,NA)
+#x <- cbind(case_eids, 1, case_sex, case_smoking, case_bmi, case_ancestry)
+#y <- cbind(control_eids, 0, control_sex, control_smoking, control_bmi, control_ancestry)
 z <- rbind(x,y)
 write.table(z, pheno_fname, append=FALSE, sep=" ", row.names=FALSE, col.names=FALSE)
 # END: OUTPUT FILES FOR ALL ANCESTRIES, ALL PANCREATITIS TYPES
